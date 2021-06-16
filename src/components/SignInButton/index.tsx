@@ -7,7 +7,7 @@ import styles from './styles.module.scss'
 export function SignInButton() {
   const [session] = useSession()
 
-  console.log(session)
+  // console.log(session)
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false)
   // function handleIsLoggedIn() {
