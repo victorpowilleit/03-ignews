@@ -15,16 +15,31 @@ export async function saveSubscription(subscriptionId:string, customerId:string,
     userId: userRef,
     status: subscription.status,
     price_id: subscription.items.data[0].price.id,
-
   }
   //Salvar od dados da subscription no FaunaDB
-  if(createAction){
-    await fauna.query(
-      q.Create(q.Collection('subscriptions'), { data: subscriptionData })
+  await fauna.query(
+    q.Create(q.Collection('subscriptions'), { data: subscriptionData })
+    // q.Replace(q.Ref(q.Collection('subscriptions'), "301858999502897664"), {data: subscriptionData})
+    //q.Replace(q.Ref(q.Collection("subscriptions"),"301858999502897664"), {data: subscriptionData})
+    
+    // q.If(q.Not(q.Exists(q.Match(q.Index('subscription_by_user_id', q.Casefold(subscriptionData.userId))))),
+    // q.Create(q.Collection('subscriptions'), { data: subscriptionData }),
+    // q.Replace(q.Select("ref",q.Get(q.Match(q.Index('subscription_by_user_id', q.Casefold(subscriptionData.userId))))), {data: subscriptionData}))
     )
-  }else{
-    await fauna.query(
-      q.Replace(q.Select("ref",q.Get(q.Match(q.Index('subscription_by_id'), subscriptionId))), {data: subscriptionData})
-    )
-  }
+
+  // if(createAction){
+  //   console.log('Gravando subscription')
+  //   await fauna.query(
+  //     q.If(q.Not(q.Exists(q.Match(q.Index('subscription_by_id', q.Casefold(subscriptionId))))),
+  //     q.Create(q.Collection('subscriptions'), { data: subscriptionData }),
+  //     q.Replace(q.Select("ref",q.Get(q.Match(q.Index('subscription_by_id'), subscriptionId))), {data: subscriptionData}))
+  //     // q.Create(q.Collection('subscriptions'), { data: subscriptionData })
+  //     )
+  // }else{
+  //   console.log('Atualizando Subscription')
+  //   await fauna.query(
+  //     // q.Replace(q.Select("ref",q.Get(q.Match(q.Index('subscription_by_id'), subscriptionId))), {data: subscriptionData})
+  //     q.Create(q.Collection('subscriptions'), { data: subscriptionData })
+  //   )
+  // }
 }
